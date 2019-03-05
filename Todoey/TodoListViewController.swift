@@ -10,10 +10,16 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["Find Mike","Bue Eggos"]
+    var itemArray = [String]()
+    let defaults =  UserDefaults.standard
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let items = defaults.array(forKey: "TodoListArray")
+        if items != nil {
+            self.itemArray = items as! [String]
+        }
+        
+        
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
@@ -52,9 +58,10 @@ class TodoListViewController: UITableViewController {
         var textField = UITextField()
         let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            print("Success ")
-            print(textField.text)
             self.itemArray.append(textField.text!)
+            
+            self.defaults.set(self.itemArray,forKey : "TodoListArray")
+            
             self.tableView.reloadData()
         }
         
